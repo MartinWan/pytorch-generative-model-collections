@@ -1,7 +1,10 @@
 import argparse, os, torch
+
+import model
+
 from GAN import GAN
 from CGAN import CGAN
-from LSGAN import *
+from LSGAN import LSGAN
 from DRAGAN import DRAGAN
 from ACGAN import ACGAN
 from WGAN import WGAN
@@ -95,8 +98,12 @@ def main():
     elif args.gan_type == 'DRAGAN':
         gan = DRAGAN(args)
     elif args.gan_type == 'LSGAN':
-        generator = InfoGANGenerator
-        discriminator = InfoGANDiscriminator
+        generator = model.InfoGANGenerator(input_dim=62, output_dim=3, input_size=args.input_size)
+        discriminator = model.InfoGANDiscriminator(input_dim=3, output_dim=1, input_size=args.input_size)
+        gan = LSGAN(args, generator, discriminator)
+    elif args.gan_type == 'LSGAN_classifier':
+        generator = model.InfoGANGenerator(input_dim=62, output_dim=3, input_size=args.input_size)
+        discriminator = model.InfoGANDiscriminatorClassifier(input_dim=3, output_dim=1, input_size=args.input_size)
         gan = LSGAN(args, generator, discriminator)
     elif args.gan_type == 'BEGAN':
         gan = BEGAN(args)
