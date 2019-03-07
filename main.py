@@ -1,7 +1,7 @@
 import argparse, os, torch
 from GAN import GAN
 from CGAN import CGAN
-from LSGAN import LSGAN
+from LSGAN import *
 from DRAGAN import DRAGAN
 from ACGAN import ACGAN
 from WGAN import WGAN
@@ -32,7 +32,7 @@ def parse_args():
     parser.add_argument('--lrD', type=float, default=0.0002)
     parser.add_argument('--beta1', type=float, default=0.5)
     parser.add_argument('--beta2', type=float, default=0.999)
-    parser.add_argument('--gpu_mode', type=bool, default=True)
+    parser.add_argument('--gpu_mode', default=False, action='store_true')
     parser.add_argument('--benchmark_mode', type=bool, default=True)
 
     return check_args(parser.parse_args())
@@ -72,6 +72,8 @@ def main():
     if args is None:
         exit()
 
+    print(args)
+
     if args.benchmark_mode:
         torch.backends.cudnn.benchmark = True
 
@@ -93,7 +95,9 @@ def main():
     elif args.gan_type == 'DRAGAN':
         gan = DRAGAN(args)
     elif args.gan_type == 'LSGAN':
-        gan = LSGAN(args)
+        generator = InfoGANGenerator
+        discriminator = InfoGANDiscriminator
+        gan = LSGAN(args, generator, discriminator)
     elif args.gan_type == 'BEGAN':
         gan = BEGAN(args)
     else:

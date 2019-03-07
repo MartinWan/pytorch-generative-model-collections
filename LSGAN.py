@@ -4,11 +4,11 @@ import torch.nn as nn
 import torch.optim as optim
 from dataloader import dataloader
 
-class generator(nn.Module):
+class InfoGANGenerator(nn.Module):
     # Network Architecture is exactly same as in infoGAN (https://arxiv.org/abs/1606.03657)
     # Architecture : FC1024_BR-FC7x7x128_BR-(64)4dc2s_BR-(1)4dc2s_S
     def __init__(self, input_dim=100, output_dim=1, input_size=32):
-        super(generator, self).__init__()
+        super(InfoGANGenerator, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.input_size = input_size
@@ -37,11 +37,11 @@ class generator(nn.Module):
 
         return x
 
-class discriminator(nn.Module):
+class InfoGANDiscriminator(nn.Module):
     # Network Architecture is exactly same as in infoGAN (https://arxiv.org/abs/1606.03657)
     # Architecture : (64)4c2s-(128)4c2s_BL-FC1024_BL-FC1_S
     def __init__(self, input_dim=1, output_dim=1, input_size=32):
-        super(discriminator, self).__init__()
+        super(InfoGANDiscriminator, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.input_size = input_size
@@ -70,7 +70,7 @@ class discriminator(nn.Module):
         return x
 
 class LSGAN(object):
-    def __init__(self, args):
+    def __init__(self, args, generator, discriminator):
         # parameters
         self.epoch = args.epoch
         self.sample_num = 100
