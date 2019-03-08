@@ -19,7 +19,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--gan_type', type=str, default='GAN',
-                        choices=['GAN', 'CGAN', 'infoGAN', 'ACGAN', 'EBGAN', 'BEGAN', 'WGAN', 'WGAN_GP', 'DRAGAN', 'LSGAN'],
+                        choices=['GAN', 'CGAN', 'infoGAN', 'ACGAN', 'EBGAN', 'BEGAN', 'WGAN', 'WGAN_GP', 'DRAGAN', 'LSGAN', 'LSGAN_classifier'],
                         help='The type of GAN')
     parser.add_argument('--dataset', type=str, default='mnist', choices=['mnist', 'fashion-mnist', 'cifar10', 'cifar100', 'svhn', 'stl10', 'lsun-bed'],
                         help='The name of dataset')
@@ -103,7 +103,7 @@ def main():
         gan = LSGAN(args, generator, discriminator)
     elif args.gan_type == 'LSGAN_classifier':
         generator = model.InfoGANGenerator(input_dim=62, output_dim=3, input_size=args.input_size)
-        discriminator = model.InfoGANDiscriminatorClassifier(input_dim=3, output_dim=1, input_size=args.input_size)
+        discriminator = model.InfoGANDiscriminatorClassifier(input_dim=3, output_dim=1, input_size=args.input_size, save_dir=args.save_dir, model_name=args.gan_type)
         gan = LSGAN(args, generator, discriminator)
     elif args.gan_type == 'BEGAN':
         gan = BEGAN(args)

@@ -1,5 +1,5 @@
 import utils
-
+import torch
 import torch.nn as nn
 import os
 
@@ -71,11 +71,11 @@ class InfoGANDiscriminator(nn.Module):
 class InfoGANDiscriminatorClassifier(nn.Module):
     def __init__(self, input_dim, output_dim, input_size, save_dir, model_name):
         super(InfoGANDiscriminatorClassifier, self).__init__()
-        self.wrapped = InfoGANDiscriminator(input_dim=input_dim, output_dim=output_dim, input_size=input_size)
+        self.wrapped = InfoGANDiscriminator(input_dim=input_dim, output_dim=10, input_size=input_size)
 
         # load weights
         print("loading state dict...")
-        state_dict = torch.load(os.path.join(save_dir, model_name + '_G.pkl'))
+        state_dict = torch.load(os.path.join(save_dir, model_name + '_D.pth'))
         self.wrapped.load_state_dict(state_dict)
 
         # freeze weights
@@ -83,7 +83,7 @@ class InfoGANDiscriminatorClassifier(nn.Module):
             param.requires_grad = False
 
         # add fine tuning layer
-        self.wrapped.fc[3] = nn.Linear(1024, 1)
+        self.wrapped.fc[3] = nn.Linear(1024, output_dim)
 
     def forward(self, x):
         return self.wrapped.forward(x)
